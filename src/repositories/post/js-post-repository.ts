@@ -2,6 +2,7 @@ import { PostModel } from '@/models/post/post-model';
 import { PostRepository } from './post-repository';
 import { resolve } from 'path';
 import { readFile } from 'fs/promises';
+import { SIMULATE_WAIT_IN_MS } from '@/lib/constants';
 
 const ROOT_DIR = process.cwd();
 const JSON_POSTS_FILE_PATH = resolve(
@@ -11,7 +12,6 @@ const JSON_POSTS_FILE_PATH = resolve(
   'seed',
   'posts.json',
 );
-const SIMULATE_WAIT_IN_MS = 0;
 
 type PostModelLista = {
   posts: PostModel[];
@@ -37,6 +37,12 @@ export class JsonPostRepository implements PostRepository {
     return (await this.readFromDisk()).filter(post => post.published);
   }
 
+  async findAll(): Promise<PostModel[]> {
+    await this.simulateWait();
+    console.log('Lendo posts do arquivo JSON');
+    return await this.readFromDisk();
+  }
+
   async findById(id: string): Promise<PostModel> {
     return this.findAllPublished().then(posts => {
       const post = posts.find(p => p.id === id);
@@ -45,7 +51,7 @@ export class JsonPostRepository implements PostRepository {
     });
   }
 
-  async findBySlug(slug: string): Promise<PostModel> {
+  async findBySlugPublished(slug: string): Promise<PostModel> {
     return this.findAllPublished().then(posts => {
       const post = posts.find(p => p.slug === slug);
       if (!post) throw new Error('Post not found');
