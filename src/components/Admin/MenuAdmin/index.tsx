@@ -1,22 +1,31 @@
 'use client';
 
+import { logoutAction } from '@/actions/login/logout-action';
 import clsx from 'clsx';
 import { set } from 'date-fns';
 import {
   CircleXIcon,
   ClosedCaption,
   FileTextIcon,
+  HourglassIcon,
   HouseIcon,
+  LogOutIcon,
   MenuIcon,
   PlusIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, {
+  startTransition,
+  useEffect,
+  useState,
+  useTransition,
+} from 'react';
 
 export function MenuAdmin() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const [isPending, startTransaction] = useTransition();
 
   useEffect(() => {
     setIsOpen(false);
@@ -44,6 +53,13 @@ export function MenuAdmin() {
     'text-blue-200 italic',
     'sm:hidden',
   );
+
+  function handleLogout(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    e.preventDefault();
+    startTransaction(async () => {
+      await logoutAction();
+    });
+  }
 
   return (
     <nav className={navClasses}>
@@ -79,6 +95,21 @@ export function MenuAdmin() {
         <PlusIcon />
         Novo Post
       </Link>
+
+      <a href='#' className={linkClasses} onClick={handleLogout}>
+        {isPending && (
+          <>
+            <HourglassIcon />
+            Aguarde...
+          </>
+        )}
+        {!isPending && (
+          <>
+            <LogOutIcon />
+            Sair
+          </>
+        )}
+      </a>
     </nav>
   );
 }

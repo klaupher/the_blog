@@ -1,10 +1,6 @@
 'use server';
 
-import {
-  IMAGE_SERVER_URL,
-  IMAGE_UPLOAD_FOLDER,
-  IMAGE_UPLOAD_MAX_SIZE,
-} from '@/lib/constants';
+import { verifyLoginSession } from '@/lib/login/manager-login';
 import { mkdir, writeFile } from 'fs/promises';
 import { extname, resolve } from 'path/win32';
 
@@ -21,7 +17,13 @@ export async function uploadImageAction(
     error,
   });
 
-  //TODO: verificar se o usuário está logado
+  const isAuthenticated = await verifyLoginSession();
+
+  if (!isAuthenticated) {
+    return makeResult({
+      error: 'Faça login novamente.',
+    });
+  }
 
   if (!(formData instanceof FormData)) {
     return makeResult({ error: 'Dados inválidos!' });
@@ -37,7 +39,9 @@ export async function uploadImageAction(
     return makeResult({ error: 'Arquivo inválido!' });
   }
 
-  if (file.size > IMAGE_UPLOAD_MAX_SIZE) {
+  const uploadMaxSize =
+    Number(process.env.NEXT_PUBLIC_IMAGE_UPLOAD_MAX_SIZE) || 921600;
+  if (file.size > uploadMaxSize) {
     return makeResult({ error: 'Arquivo muito grande!' });
   }
 
@@ -47,7 +51,9 @@ export async function uploadImageAction(
 
   const imageExtension = extname(file.name);
   const uniqueImageName = `${Date.now()}${imageExtension}`;
-  const uploadFullPath = resolve(process.cwd(), 'public', IMAGE_UPLOAD_FOLDER);
+
+  const uploadDir = process.env.IMAGE_UPLOAD_FOLDER || 'uploads';
+  const uploadFullPath = resolve(process.cwd(), 'public', uploadDir);
   await mkdir(uploadFullPath, { recursive: true });
 
   // JS -> bytes -> Node.js (fs) -> salvar o arquivo no sistema de arquivos
@@ -56,7 +62,9 @@ export async function uploadImageAction(
   const fileFullPath = resolve(uploadFullPath, uniqueImageName);
   await writeFile(fileFullPath, buffer);
 
-  const url = `${IMAGE_SERVER_URL}/${uniqueImageName}`;
-  console.log(`Imagem enviada com sucesso! ${url}`);
+  const imageServerUrl =
+    process.env.IMAGE_SERVER_URL || 'http://localhost:3000/uploads';
+  const url = `${imageServerUrl}/${uniqueImageName}`;
+
   return makeResult({ url });
 }
