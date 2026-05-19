@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyJWT, verifyLoginSession } from './lib/login/manager-login';
+import { verifyJWT } from './lib/login/manager-login';
 
 export async function middleware(request: NextRequest) {
   const isLoginPage = request.nextUrl.pathname.startsWith('/admin/login');

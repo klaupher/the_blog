@@ -9,6 +9,7 @@ import { postsTable } from './schemas';
   try {
     await drizzleDb.delete(postsTable); //CUIDADO: Isso apaga todos os posts antes de inserir os novos
     await drizzleDb.insert(postsTable).values(posts);
+    console.log('Posts inserted successfully');
   } catch (error) {
     console.error('Error inserting posts:', error);
   }

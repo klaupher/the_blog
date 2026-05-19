@@ -2,10 +2,8 @@
 
 import { logoutAction } from '@/actions/login/logout-action';
 import clsx from 'clsx';
-import { set } from 'date-fns';
 import {
   CircleXIcon,
-  ClosedCaption,
   FileTextIcon,
   HourglassIcon,
   HouseIcon,
@@ -15,12 +13,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, {
-  startTransition,
-  useEffect,
-  useState,
-  useTransition,
-} from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 
 export function MenuAdmin() {
   const [isOpen, setIsOpen] = useState(false);
