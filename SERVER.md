@@ -42,11 +42,13 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
 nvm install --lts
 node --version # só para conferir
 npm -g install npm@latest
+# Fechar o terminal e abrir novamente para aplicar o NPM completamente
 ```
 
 Comandos para iniciar o site do zero:
 
 ```sh
+cd theblog
 # Ter o node instalado
 # Instalar todos os pacotes
 npm i

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "build-server": "NODE_OPTIONS='--max-old-space-size=1024' next build --turbopack",
     "start": "next start",
     "lint": "next lint",
     "migrate": "drizzle-kit migrate",
