@@ -17,6 +17,13 @@ const nextConfig: NextConfig = {
         pathname: '/**',
         search: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'theblog.maluju.com.br',
+        port: '',
+        pathname: '/**',
+        search: '',
+      },
     ],
   },
 };
