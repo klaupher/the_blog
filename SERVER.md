@@ -193,8 +193,10 @@ pm2 start npm --name theblog -- start #
 pm2 save
 pm2 startup # Copia e cola o resultado desse comando e dápressiona ENTER
 pm2 save # só pra garantir
+# se quiser desfazer tudo que o pm2
+pm2 unstartup systemd
 
-# Ver
+# Comandos para ver e analisar o PM2
 pm2 list # listar
 pm2 restart theblog # reinicia
 pm2 stop theblog # para
